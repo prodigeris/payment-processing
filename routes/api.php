@@ -18,16 +18,18 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
+Route::get('subscriptions', 'SubscriptionController@index');
+
+
 Route::post('webhooks/apple', 'AppleWebhookController');
 
-Route::get('imitate/apple/{event}', static function(string $event) {
+Route::get('imitate/apple/{subscription}/{event}', static function(\App\Subscription $subscription, string $event) {
 
     /**
      * @var \App\PaymentProcessing\CallbackHandler $handler
      */
     $handler = resolve(\App\PaymentProcessing\CallbackHandler::class);
 
-    $subscription = \App\Subscription::create();
 
     $handler->handle('apple', [
         'notification_type' => strtoupper($event),
