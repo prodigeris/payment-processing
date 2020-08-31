@@ -4,8 +4,6 @@ declare(strict_types=1);
 
 namespace App\PaymentProcessing;
 
-use App\PaymentProcessing\Apple\AppleCallbackProcessor;
-
 class ProviderFactory
 {
     /**
