@@ -4,10 +4,12 @@ declare(strict_types=1);
 
 namespace Tests\Unit\App\PaymentProcessing\Apple;
 
+use App\Events\Payments\PaymentSubscriptionRefunded;
 use App\PaymentProcessing\Apple\AppleCallback;
 use App\PaymentProcessing\Apple\AppleCallbackProcessor;
 use App\PaymentProcessing\Apple\AppleCallbackTransformer;
 use Illuminate\Contracts\Support\Arrayable;
+use Illuminate\Support\Facades\Event;
 use Mockery as m;
 use Tests\TestCase;
 use Prophecy\Argument;
@@ -58,12 +60,19 @@ class AppleCallbackProcessorTest extends TestCase
 
     public function testDispatchesCorrectEvent(): void
     {
-        $this->mockSubscription(new Subscription());
+        Event::fake();
+
+        $this->mockSubscription($s = new Subscription());
+        $s->id = 1;
 
         $callback = new AppleCallback('REFUND', '1');
         $this->appleCallbackTransformer->transform(Argument::any())->willReturn($callback);
 
         $this->appleCallbackProcessor->process([]);
+
+        Event::assertDispatched(static function (PaymentSubscriptionRefunded $event) use ($s) {
+            return $event->getSubscription()->id === $s->id;
+        });
     }
 
     private function mockSubscription(?Subscription $s): void
