@@ -15,7 +15,7 @@ class AppleWebhookTest extends TestCase
     /**
      * Add factories!
      */
-    public function AssertAcceptsWebhook(): void
+    public function testAssertAcceptsWebhook(): void
     {
         $subscription = new Subscription();
         $subscription->save();

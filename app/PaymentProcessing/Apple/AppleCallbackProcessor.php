@@ -68,8 +68,6 @@ class AppleCallbackProcessor implements CallbackProcessor
     {
         /** @var $event string|Event */
         $event = $this->fetchEvent($callback);
-        print_r($event);
-        die;
         $event::dispatch(
             $this->findSubscriptionOrFail($callback->getSubscriptionId())
         );

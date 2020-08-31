@@ -11,16 +11,16 @@ use Illuminate\Http\Request;
 
 class AppleWebhookController extends Controller
 {
-    private CallbackHandler $callbackProcessor;
+    private CallbackHandler $callbackHandler;
 
     public function __construct(CallbackHandler $callbackProcessor)
     {
-        $this->callbackProcessor = $callbackProcessor;
+        $this->callbackHandler = $callbackProcessor;
     }
 
     public function __invoke(Request $request)
     {
-        $this->callbackProcessor->handle(Provider::APPLE, $request->post());
+        $this->callbackHandler->handle(Provider::APPLE, $request->post());
 
         return new JsonResponse([], 202);
     }

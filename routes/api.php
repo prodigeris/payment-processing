@@ -1,6 +1,5 @@
 <?php
 
-use App\Http\Controllers\AppleWebhookController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,5 +19,20 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 });
 
 Route::post('webhooks/apple', 'AppleWebhookController');
+
+Route::get('imitate/apple/{event}', static function(string $event) {
+
+    /**
+     * @var \App\PaymentProcessing\CallbackHandler $handler
+     */
+    $handler = resolve(\App\PaymentProcessing\CallbackHandler::class);
+
+    $subscription = \App\Subscription::create();
+
+    $handler->handle('apple', [
+        'notification_type' => strtoupper($event),
+        'auto_renew_product_id' => (string) $subscription->id,
+    ]);
+});
 
 
