@@ -8,7 +8,6 @@ use App\PaymentProcessing\Apple\AppleCallbackProcessor;
 
 class ProviderFactory
 {
-    private AppleCallbackProcessor $appleCallbackProcessor;
     /**
      * @var array|CallbackProcessor[]
      */
