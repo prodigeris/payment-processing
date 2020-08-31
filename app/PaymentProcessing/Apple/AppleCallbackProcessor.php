@@ -11,6 +11,7 @@ use App\Events\Payments\PaymentSubscriptionRenewalFailed;
 use App\Events\Payments\PaymentSubscriptionRenewed;
 use App\PaymentProcessing\CallbackProcessor;
 use App\Subscription;
+use Illuminate\Support\Facades\Event;
 
 class AppleCallbackProcessor implements CallbackProcessor
 {
@@ -48,11 +49,6 @@ class AppleCallbackProcessor implements CallbackProcessor
         return $subscription;
     }
 
-    private function fetchSubscription(AppleCallback $callback): Subscription
-    {
-        return $this->findSubscriptionOrFail($callback->getSubscriptionId());
-    }
-
     /**
      * @param AppleCallback $callback
      */
@@ -70,7 +66,7 @@ class AppleCallbackProcessor implements CallbackProcessor
 
     private function dispatchEvent(AppleCallback $callback): void
     {
-        // improve autocomplete
+        /** @var $event string|Event */
         $event = $this->fetchEvent($callback);
         $event::dispatch(
             $this->findSubscriptionOrFail($callback->getSubscriptionId())
