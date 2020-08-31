@@ -2,16 +2,17 @@
 
 declare(strict_types=1);
 
-namespace App\PaymentProcessing\Provider;
+namespace App\PaymentProcessing\Apple;
 
 use App\Events\Payments\PaymentSubscriptionCancelled;
 use App\Events\Payments\PaymentSubscriptionCreated;
 use App\Events\Payments\PaymentSubscriptionRefunded;
 use App\Events\Payments\PaymentSubscriptionRenewalFailed;
 use App\Events\Payments\PaymentSubscriptionRenewed;
+use App\PaymentProcessing\CallbackProcessor;
 use App\Subscription;
 
-class AppleCallbackProcessor
+class AppleCallbackProcessor implements CallbackProcessor
 {
     private AppleCallbackTransformer $transformer;
 

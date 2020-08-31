@@ -4,27 +4,35 @@ declare(strict_types=1);
 
 namespace App\PaymentProcessing;
 
-use App\PaymentProcessing\Provider\AppleCallbackProcessor;
+use App\PaymentProcessing\Apple\AppleCallbackProcessor;
 
 class ProviderFactory
 {
     private AppleCallbackProcessor $appleCallbackProcessor;
+    /**
+     * @var array|CallbackProcessor[]
+     */
+    private array $providers;
 
-    public function __construct(AppleCallbackProcessor $appleCallbackProcessor)
+    /**
+     * @param array|CallbackProcessor[] $providers
+     */
+    public function __construct(array $providers)
     {
-        $this->appleCallbackProcessor = $appleCallbackProcessor;
+        $this->providers = $providers;
     }
 
-    public function build(CallbackRequest $request)
+    public function build(CallbackRequest $request): void
     {
-        switch($request->getProvider()) {
-            case 'apple':
-                $this->appleCallbackProcessor->process($request->getPayload());
-                break;
-            default:
-                throw new \RuntimeException(
-                    sprintf('Unknown payment processor provider [%s]', $request->getProvider()
-                    ));
+        $this->throwIfCallbackProviderNotFound($request);
+
+        $this->providers[$request->getProvider()]->process($request->getPayload());
+    }
+
+    private function throwIfCallbackProviderNotFound(CallbackRequest $request): void
+    {
+        if (!array_key_exists($request->getProvider(), $this->providers)) {
+            throw new \RuntimeException('Unknown callback provider');
         }
     }
 }

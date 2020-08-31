@@ -11,6 +11,8 @@
 |
 */
 
+use Illuminate\Contracts\Foundation\Application;
+
 $app = new Illuminate\Foundation\Application(
     $_ENV['APP_BASE_PATH'] ?? dirname(__DIR__)
 );
@@ -39,6 +41,15 @@ $app->singleton(
 $app->singleton(
     Illuminate\Contracts\Debug\ExceptionHandler::class,
     App\Exceptions\Handler::class
+);
+
+$app->singleton(
+    App\PaymentProcessing\ProviderFactory::class,
+    static function (Application $app) {
+        return new App\PaymentProcessing\ProviderFactory([
+            App\PaymentProcessing\Provider::APPLE => $app->make(App\PaymentProcessing\Apple\AppleCallbackProcessor::class)
+        ]);
+    }
 );
 
 /*

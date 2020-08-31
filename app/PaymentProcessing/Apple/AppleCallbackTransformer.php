@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\PaymentProcessing\Provider;
+namespace App\PaymentProcessing\Apple;
 
 class AppleCallbackTransformer
 {

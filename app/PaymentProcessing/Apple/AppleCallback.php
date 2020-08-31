@@ -2,14 +2,11 @@
 
 declare(strict_types=1);
 
-namespace App\PaymentProcessing\Provider;
+namespace App\PaymentProcessing\Apple;
 
 class AppleCallback
 {
     private string $event;
-    /**
-     * @var string
-     */
     private string $subscriptionId;
 
     public function __construct(string $event, string $subscriptionId)

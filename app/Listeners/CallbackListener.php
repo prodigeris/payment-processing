@@ -5,8 +5,6 @@ namespace App\Listeners;
 use App\Events\Callbacks\CallbackReceived;
 use App\PaymentProcessing\CallbackRequest;
 use App\PaymentProcessing\ProviderFactory;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class CallbackListener
 {
