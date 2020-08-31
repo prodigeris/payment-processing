@@ -5,6 +5,7 @@ namespace App\Providers;
 use App\Events\Callbacks\CallbackReceived;
 use App\Events\Listeners\CallbackListener;
 use App\Events\Payments\PaymentSubscriptionCancelled;
+use App\Events\Payments\PaymentSubscriptionRefunded;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -16,6 +17,7 @@ use App\Listeners\MarkAsFailedSubscription;
 use App\Listeners\RenewsSubscription;
 use App\Listeners\ActivatesSubscription;
 use App\Listener\MarkAsCancelled;
+use App\Listener\MarkAsRefunded;
 
 class EventServiceProvider extends ServiceProvider
 {
@@ -42,6 +44,9 @@ class EventServiceProvider extends ServiceProvider
         ],
         PaymentSubscriptionCancelled::class => [
             MarkAsCancelled::class
+        ],
+        PaymentSubscriptionRefunded::class => [
+            MarkAsRefunded::class
         ],
     ];
 

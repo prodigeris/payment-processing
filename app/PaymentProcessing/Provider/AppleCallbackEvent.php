@@ -12,4 +12,5 @@ class AppleCallbackEvent
     public const DID_RECOVER = 'DID_RECOVER';
     public const DID_FAIL_TO_RENEW = 'DID_FAIL_TO_RENEW';
     public const CANCEL = 'CANCEL';
+    public const REFUND = 'REFUND';
 }

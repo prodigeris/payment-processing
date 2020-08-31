@@ -41,4 +41,11 @@ class SubscriptionManager
     {
         $this->markAsFailed($subscription);
     }
+
+    public function markAsRefunded(Subscription $subscription): void
+    {
+        $subscription->active = false;
+        $subscription->activeRenewal = false;
+        $subscription->save();
+    }
 }
