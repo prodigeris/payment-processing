@@ -6,5 +6,5 @@ namespace App\PaymentProcessing;
 
 interface CallbackProcessor
 {
-    public function process(array $data): void;
+    public function process(CallbackRequest $request): void;
 }

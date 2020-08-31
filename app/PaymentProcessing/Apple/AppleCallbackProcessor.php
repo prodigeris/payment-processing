@@ -10,6 +10,7 @@ use App\Events\Payments\PaymentSubscriptionRefunded;
 use App\Events\Payments\PaymentSubscriptionRenewalFailed;
 use App\Events\Payments\PaymentSubscriptionRenewed;
 use App\PaymentProcessing\CallbackProcessor;
+use App\PaymentProcessing\CallbackRequest;
 use App\Subscription;
 use Illuminate\Support\Facades\Event;
 
@@ -32,9 +33,9 @@ class AppleCallbackProcessor implements CallbackProcessor
         $this->transformer = $transformer;
     }
 
-    public function process(array $data): void
+    public function process(CallbackRequest $request): void
     {
-        $callback = $this->transformer->transform($data);
+        $callback = $this->transformer->transform($request->getPayload());
         $this->throwErrorIfUnknownEvent($callback);
         $this->dispatchEvent($callback);
     }

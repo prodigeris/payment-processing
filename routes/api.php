@@ -22,6 +22,7 @@ Route::get('subscriptions', 'SubscriptionController@index');
 
 
 Route::post('webhooks/apple', 'AppleWebhookController');
+Route::post('webhooks/{provider}', 'WebhookController');
 
 Route::get('imitate/apple/{subscription}/{event}', static function(\App\Subscription $subscription, string $event) {
 

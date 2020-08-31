@@ -7,4 +7,5 @@ namespace App\PaymentProcessing;
 class Provider
 {
     public const APPLE = 'apple';
+    public const BRAINTREE = 'braintree';
 }

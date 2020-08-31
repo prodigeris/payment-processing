@@ -5,8 +5,9 @@ namespace App\Listeners;
 use App\Events\Callbacks\CallbackReceived;
 use App\PaymentProcessing\CallbackRequest;
 use App\PaymentProcessing\ProviderFactory;
+use Illuminate\Contracts\Queue\ShouldQueue;
 
-class CallbackListener
+class CallbackListener implements ShouldQueue
 {
     /**
      * @var ProviderFactory

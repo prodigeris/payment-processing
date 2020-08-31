@@ -47,7 +47,7 @@ $app->singleton(
     App\PaymentProcessing\ProviderFactory::class,
     static function (Application $app) {
         return new App\PaymentProcessing\ProviderFactory([
-            App\PaymentProcessing\Provider::APPLE => $app->make(App\PaymentProcessing\Apple\AppleCallbackProcessor::class)
+            App\PaymentProcessing\Provider::APPLE => $app->make(App\PaymentProcessing\Apple\AppleCallbackProcessor::class),
         ]);
     }
 );

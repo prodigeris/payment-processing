@@ -23,7 +23,7 @@ class ProviderFactory
     {
         $this->throwIfCallbackProviderNotFound($request);
 
-        $this->providers[$request->getProvider()]->process($request->getPayload());
+        $this->providers[$request->getProvider()]->process($request);
     }
 
     private function throwIfCallbackProviderNotFound(CallbackRequest $request): void
