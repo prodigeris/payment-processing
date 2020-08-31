@@ -2,6 +2,8 @@
 
 namespace App\Providers;
 
+use App\Events\Callbacks\CallbackReceived;
+use App\Events\Listeners\CallbackListener;
 use Illuminate\Auth\Events\Registered;
 use Illuminate\Auth\Listeners\SendEmailVerificationNotification;
 use Illuminate\Foundation\Support\Providers\EventServiceProvider as ServiceProvider;
@@ -17,6 +19,15 @@ class EventServiceProvider extends ServiceProvider
     protected $listen = [
         Registered::class => [
             SendEmailVerificationNotification::class,
+        ],
+        'App\Events\Callbacks\CallbackReceived' => [
+            'App\Listeners\CallbackListener'
+        ],
+        'App\Events\Payments\PaymentSubscriptionCreated' => [
+            'App\Listeners\ActivatesSubscription'
+        ],
+        'App\Events\Payments\PaymentSubscriptionRenewed' => [
+            'App\Listeners\RenewsSubscription'
         ],
     ];
 

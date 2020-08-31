@@ -1,0 +1,54 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\PaymentProcessing\Provider;
+
+use App\Events\Payments\PaymentSubscriptionCreated;
+use App\Events\Payments\PaymentSubscriptionRenewed;
+use App\Subscription;
+
+class AppleCallbackProcessor
+{
+    private AppleCallbackTransformer $transformer;
+
+    public function __construct(AppleCallbackTransformer $transformer)
+    {
+        $this->transformer = $transformer;
+    }
+
+    public function process(array $data): void
+    {
+        $callback = $this->transformer->transform($data);
+        switch ($callback->getEvent()) {
+            case AppleCallbackEvent::INITIAL_BUY:
+                PaymentSubscriptionCreated::dispatch(
+                    $this->fetchSubscription($callback)
+                );
+                break;
+            case AppleCallbackEvent::RENEWAL:
+            case AppleCallbackEvent::INTERACTIVE_RENEWAL:
+                PaymentSubscriptionRenewed::dispatch(
+                    $this->fetchSubscription($callback)
+                );
+                break;
+            default:
+                throw new \RuntimeException('Unknown apple event');
+        }
+    }
+
+    private function findSubscriptionOrFail(string $id): Subscription
+    {
+        $subscription = Subscription::find((int) $id);
+        if(! $subscription) {
+            throw new \RuntimeException('Subscription not found');
+        }
+
+        return $subscription;
+    }
+
+    private function fetchSubscription(AppleCallback $callback): Subscription
+    {
+        return $this->findSubscriptionOrFail($callback->getSubscriptionId());
+    }
+}
