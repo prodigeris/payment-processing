@@ -5,7 +5,6 @@ declare(strict_types=1);
 namespace Tests\Unit\App\PaymentProcessing\Apple;
 
 use App\PaymentProcessing\Apple\AppleCallback;
-use App\PaymentProcessing\Apple\AppleCallbackEvent;
 use App\PaymentProcessing\Apple\AppleCallbackProcessor;
 use App\PaymentProcessing\Apple\AppleCallbackTransformer;
 use Tests\TestCase;
