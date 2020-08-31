@@ -18,6 +18,24 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
 });
 
-Route::
+Route::get('subscriptions', 'SubscriptionController@index');
+
+
+Route::post('webhooks/apple', 'AppleWebhookController');
+Route::post('webhooks/{provider}', 'WebhookController');
+
+Route::get('imitate/apple/{subscription}/{event}', static function(\App\Subscription $subscription, string $event) {
+
+    /**
+     * @var \App\PaymentProcessing\CallbackHandler $handler
+     */
+    $handler = resolve(\App\PaymentProcessing\CallbackHandler::class);
+
+
+    $handler->handle('apple', [
+        'notification_type' => strtoupper($event),
+        'auto_renew_product_id' => (string) $subscription->id,
+    ]);
+});
 
 

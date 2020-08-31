@@ -4,7 +4,7 @@ declare(strict_types=1);
 
 namespace App\PaymentProcessing;
 
-class CallbackProcessor
+interface CallbackProcessor
 {
-
+    public function process(CallbackRequest $request): void;
 }
