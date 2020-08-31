@@ -41,7 +41,7 @@ class AppleCallbackProcessor implements CallbackProcessor
 
     private function findSubscriptionOrFail(string $id): Subscription
     {
-        $subscription = Subscription::find((int) $id);
+        $subscription = resolve(Subscription::class)::find((int) $id);
         if(! $subscription) {
             throw new \RuntimeException('Subscription not found');
         }
