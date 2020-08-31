@@ -3,10 +3,7 @@
 namespace App\Listeners;
 
 use App\Events\Payments\PaymentSubscriptionRenewalFailed;
-use App\Events\Payments\PaymentSubscriptionRenewed;
 use App\Subscription\SubscriptionManager;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use Illuminate\Queue\InteractsWithQueue;
 
 class MarkAsFailedSubscription
 {

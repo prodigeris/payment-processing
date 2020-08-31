@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\PaymentProcessing\Provider;
 
+use App\Events\Payments\PaymentSubscriptionCancelled;
 use App\Events\Payments\PaymentSubscriptionCreated;
 use App\Events\Payments\PaymentSubscriptionRenewalFailed;
 use App\Events\Payments\PaymentSubscriptionRenewed;
@@ -36,6 +37,11 @@ class AppleCallbackProcessor
                 break;
             case AppleCallbackEvent::DID_FAIL_TO_RENEW:
                 PaymentSubscriptionRenewalFailed::dispatch(
+                    $this->fetchSubscription($callback)
+                );
+                break;
+            case AppleCallbackEvent::CANCEL:
+                PaymentSubscriptionCancelled::dispatch(
                     $this->fetchSubscription($callback)
                 );
                 break;

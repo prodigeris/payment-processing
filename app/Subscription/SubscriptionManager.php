@@ -36,4 +36,9 @@ class SubscriptionManager
         $subscription->activeRenewal = false;
         $subscription->save();
     }
+
+    public function markAsCancelled(Subscription $subscription): void
+    {
+        $this->markAsFailed($subscription);
+    }
 }

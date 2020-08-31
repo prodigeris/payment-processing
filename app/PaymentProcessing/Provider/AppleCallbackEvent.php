@@ -11,4 +11,5 @@ class AppleCallbackEvent
     public const INTERACTIVE_RENEWAL = 'INTERACTIVE_RENEWAL';
     public const DID_RECOVER = 'DID_RECOVER';
     public const DID_FAIL_TO_RENEW = 'DID_FAIL_TO_RENEW';
+    public const CANCEL = 'CANCEL';
 }

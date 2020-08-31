@@ -27,6 +27,4 @@ class PaymentSubscriptionCreated
     {
         return $this->subscription;
     }
-
-
 }
