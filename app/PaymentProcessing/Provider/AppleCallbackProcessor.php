@@ -15,6 +15,16 @@ class AppleCallbackProcessor
 {
     private AppleCallbackTransformer $transformer;
 
+    private array $eventMap = [
+        AppleCallbackEvent::INITIAL_BUY => PaymentSubscriptionCreated::class,
+        AppleCallbackEvent::RENEWAL => PaymentSubscriptionRenewed::class,
+        AppleCallbackEvent::INTERACTIVE_RENEWAL => PaymentSubscriptionRenewed::class,
+        AppleCallbackEvent::DID_RECOVER => PaymentSubscriptionRenewed::class,
+        AppleCallbackEvent::DID_FAIL_TO_RENEW => PaymentSubscriptionRenewalFailed::class,
+        AppleCallbackEvent::CANCEL => PaymentSubscriptionCancelled::class,
+        AppleCallbackEvent::REFUND => PaymentSubscriptionRefunded::class,
+    ];
+
     public function __construct(AppleCallbackTransformer $transformer)
     {
         $this->transformer = $transformer;
@@ -23,37 +33,8 @@ class AppleCallbackProcessor
     public function process(array $data): void
     {
         $callback = $this->transformer->transform($data);
-        switch ($callback->getEvent()) {
-            case AppleCallbackEvent::INITIAL_BUY:
-                PaymentSubscriptionCreated::dispatch(
-                    $this->fetchSubscription($callback)
-                );
-                break;
-            case AppleCallbackEvent::RENEWAL:
-            case AppleCallbackEvent::INTERACTIVE_RENEWAL:
-            case AppleCallbackEvent::DID_RECOVER:
-                PaymentSubscriptionRenewed::dispatch(
-                    $this->fetchSubscription($callback)
-                );
-                break;
-            case AppleCallbackEvent::DID_FAIL_TO_RENEW:
-                PaymentSubscriptionRenewalFailed::dispatch(
-                    $this->fetchSubscription($callback)
-                );
-                break;
-            case AppleCallbackEvent::CANCEL:
-                PaymentSubscriptionCancelled::dispatch(
-                    $this->fetchSubscription($callback)
-                );
-                break;
-            case AppleCallbackEvent::REFUND:
-                PaymentSubscriptionRefunded::dispatch(
-                    $this->fetchSubscription($callback)
-                );
-                break;
-            default:
-                throw new \RuntimeException('Unknown apple event');
-        }
+        $this->throwErrorIfUnknownEvent($callback);
+        $this->dispatchEvent($callback);
     }
 
     private function findSubscriptionOrFail(string $id): Subscription
@@ -69,5 +50,29 @@ class AppleCallbackProcessor
     private function fetchSubscription(AppleCallback $callback): Subscription
     {
         return $this->findSubscriptionOrFail($callback->getSubscriptionId());
+    }
+
+    /**
+     * @param AppleCallback $callback
+     */
+    private function throwErrorIfUnknownEvent(AppleCallback $callback): void
+    {
+        if (!array_key_exists($callback->getEvent(), $this->eventMap)) {
+            throw new \RuntimeException('Unknown apple event');
+        }
+    }
+
+    private function fetchEvent(AppleCallback $callback): string
+    {
+        return $this->eventMap[$callback->getEvent()];
+    }
+
+    private function dispatchEvent(AppleCallback $callback): void
+    {
+        // improve autocomplete
+        $event = $this->fetchEvent($callback);
+        $event::dispatch(
+            $this->findSubscriptionOrFail($callback->getSubscriptionId())
+        );
     }
 }
